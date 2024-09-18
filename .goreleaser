@@ -34,10 +34,10 @@ changelog:
       - '^docs:'
       - '^test:'
 brews:
-  - tap:
+  - repository:
       owner: vvrnv
       name: homebrew-tap
-    folder: Formula
+    directory: Formula
     goarm: "7"
     homepage: https://vvrnv.dev
     description: A command-line tool to sync certificate and key data from a remote Kubernetes cluster's kubeconfig to your local kubeconfig.
