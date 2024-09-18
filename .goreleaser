@@ -1,0 +1,50 @@
+# This is an example .goreleaser.yml file with some sensible defaults.
+# Make sure to check the documentation at https://goreleaser.com
+before:
+  hooks:
+    # You may remove this if you don't use go modules.
+    - go mod tidy
+builds:
+  - env:
+      - CGO_ENABLED=0
+    ldflags:
+    - -X github.com/vvrnv/kctxsync/cmd.Tag={{ .Tag }}
+    - -X github.com/vvrnv/kctxsync/cmd.Os={{ .Os }}
+    - -X github.com/vvrnv/kctxsync/cmd.Arch={{ .Arch }}
+    - -X github.com/vvrnv/kctxsync/cmd.Date={{ .Date }}
+    - -X github.com/vvrnv/kctxsync/cmd.Commit={{ .FullCommit }}
+    goos:
+      - linux
+      - windows
+      - darwin
+    goarch:
+      - amd64
+      - arm64
+    ignore:
+      - goos: windows
+        goarch: arm64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ incpatch .Version }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+brews:
+  - tap:
+      owner: vvrnv
+      name: homebrew-tap
+    folder: Formula
+    goarm: "7"
+    homepage: https://vvrnv.dev
+    description: simple CLI app for checking SSL certificates
+    license: MIT
+    commit_author:
+      name: vvrnv
+      email: valeravoronov96@gmail.com
+# modelines, feel free to remove those if you don't want/use them:
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
