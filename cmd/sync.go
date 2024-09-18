@@ -20,9 +20,9 @@ var sshUser string
 var syncCmd = &cobra.Command{
 	Use:   "sync [context name]",
 	Short: "Sync local kubeconfig with remote server",
-	Args:  cobra.ExactArgs(1), // Expect exactly one argument: context name
+	Args:  cobra.MaximumNArgs(1), // Maximum one argument: context name (can be omitted)
 	Run: func(cmd *cobra.Command, args []string) {
-		contextName := args[0]
+		var contextName string
 
 		// Set default kubeconfig path if not provided
 		if kubeconfigPathSync == "" {
@@ -34,6 +34,23 @@ var syncCmd = &cobra.Command{
 		if err != nil {
 			fmt.Printf("Error loading local kubeconfig file from %s: %v\n", kubeconfigPathSync, err)
 			os.Exit(1)
+		}
+
+		// If no context is provided, try to select it automatically
+		if len(args) == 0 {
+			if len(localConfig.Contexts) == 1 {
+				// If there is only one context, select it automatically
+				for ctx := range localConfig.Contexts {
+					contextName = ctx
+					break
+				}
+				fmt.Printf("No context provided, using the only available context: %s\n", contextName)
+			} else {
+				fmt.Println("Error: No context provided and there are multiple contexts in the config. Please choose a context.")
+				os.Exit(1)
+			}
+		} else {
+			contextName = args[0]
 		}
 
 		// Find the context in the local kubeconfig

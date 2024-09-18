@@ -29,12 +29,14 @@ To sync the local kubeconfig with the remote server's kubeconfig, use the follow
 kctxsync sync <context_name>
 ```
 
-- <context_name>: The name of the Kubernetes context you wish to sync.
+- <context_name>: (Optional) The name of the Kubernetes context you wish to sync.
 - Optionally, you can specify the path to the local kubeconfig and the SSH user:
 
 ```bash
 kctxsync sync <context_name> --config /path/to/kubeconfig --user <ssh_user>
 ```
+
+If you do not provide a context and there are multiple contexts in the kubeconfig, an error will prompt you to select a context explicitly.
 
 ## Example
 
