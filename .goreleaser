@@ -40,7 +40,7 @@ brews:
     folder: Formula
     goarm: "7"
     homepage: https://vvrnv.dev
-    description: simple CLI app for checking SSL certificates
+    description: A command-line tool to sync certificate and key data from a remote Kubernetes cluster's kubeconfig to your local kubeconfig.
     license: MIT
     commit_author:
       name: vvrnv
