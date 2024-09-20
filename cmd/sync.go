@@ -9,14 +9,15 @@ import (
 	"strings"
 
 	"k8s.io/client-go/tools/clientcmd"
-	"k8s.io/client-go/tools/clientcmd/api"
+	"k8s.io/client-go/tools/clientcmd/api" // Importing api
 
 	"github.com/spf13/cobra"
 )
 
 var kubeconfigPathSync string
 var sshUser string
-var syncAll bool // New flag for syncing all contexts
+var sshHost string // New flag for specifying the SSH host
+var syncAll bool   // Flag for syncing all contexts
 
 // syncCmd defines the command to sync kubeconfig with a remote server
 var syncCmd = &cobra.Command{
@@ -91,14 +92,17 @@ func syncContext(contextName string, localConfig *api.Config) {
 		os.Exit(1)
 	}
 
-	// Extract the server URL (remove https:// if exists)
-	serverURL := strings.TrimPrefix(cluster.Server, "https://")
-
-	// Remove port if present
-	serverHost := strings.Split(serverURL, ":")[0]
+	// Use the SSH host from the flag if provided, otherwise use the server from the kubeconfig
+	serverHost := sshHost
 	if serverHost == "" {
-		fmt.Printf("Cluster for context '%s' does not have a valid server URL\n", contextName)
-		os.Exit(1)
+		// Extract the server URL from kubeconfig (remove https:// if exists)
+		serverURL := strings.TrimPrefix(cluster.Server, "https://")
+		// Remove port if present
+		serverHost = strings.Split(serverURL, ":")[0]
+		if serverHost == "" {
+			fmt.Printf("Cluster for context '%s' does not have a valid server URL\n", contextName)
+			os.Exit(1)
+		}
 	}
 
 	// Get the remote kubeconfig via SSH
@@ -177,6 +181,8 @@ func init() {
 	syncCmd.Flags().StringVarP(&kubeconfigPathSync, "config", "c", "", "Path to the kubeconfig file")
 	// Define the user flag (-u or --user) to specify SSH user
 	syncCmd.Flags().StringVarP(&sshUser, "user", "u", "root", "Username for SSH connection")
+	// Define the ssh flag (-s or --ssh) to specify the SSH host manually
+	syncCmd.Flags().StringVarP(&sshHost, "ssh", "s", "", "Specify SSH host (if not provided, will use the server from kubeconfig)")
 	// Define the all flag (-a or --all) to sync all contexts
 	syncCmd.Flags().BoolVarP(&syncAll, "all", "a", false, "Sync all contexts from the kubeconfig file")
 }
