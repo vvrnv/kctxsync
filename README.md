@@ -3,7 +3,6 @@
 <p align="center">
 <img src="https://img.shields.io/github/downloads/vvrnv/kctxsync/total" alt="Total Downloads">
 <img src="https://img.shields.io/github/go-mod/go-version/vvrnv/kctxsync" alt="Go Version">
-<a href="https://pkg.go.dev/github.com/vvrnv/kctxsync"><img src="https://pkg.go.dev/badge/github.com/vvrnv/kctxsync.svg" alt="Go Version"></a>
 </p>
 
 `kctxsync` is a command-line tool designed to synchronize the certificate and key data from a remote Kubernetes cluster's kubeconfig file to your local kubeconfig. It is particularly useful for updating the local kubeconfig when certificates or keys have changed in the remote cluster, ensuring that your local environment is always in sync with the remote server.
