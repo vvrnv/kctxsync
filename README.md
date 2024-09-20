@@ -11,7 +11,8 @@
 
 - **Sync kubeconfig**: Automatically fetches the kubeconfig file from a remote server via SSH and updates the local kubeconfig with any changes in the certificate-authority-data, client-certificate-data, or client-key-data.
 - **Effortless updates**: No need to manually inspect or copy certificates and keys between your local and remote environments. The tool ensures that your local kubeconfig always contains the latest certificates from the remote cluster.
-- **Flexible configuration**: Specify the path to your local kubeconfig file and the SSH user for remote access, allowing for a customizable workflow.
+- **Flexible configuration**: Specify the path to your local kubeconfig file, SSH user, and even the SSH host for remote access, allowing for a customizable workflow.
+- **Sync all contexts**: The --all flag allows you to sync all contexts from your local kubeconfig in one go.
 
 ## How it works
 
@@ -21,6 +22,8 @@
 4. If differences are found, the local kubeconfig is updated with the remote data, ensuring that your environment has the correct and up-to-date credentials.
 
 ## Usage
+
+### Sync a specific context
 
 To sync the local kubeconfig with the remote server's kubeconfig, use the following command:
 
@@ -37,13 +40,32 @@ kctxsync sync <context_name> --config /path/to/kubeconfig --user <ssh_user>
 
 If you do not provide a context and there are multiple contexts in the kubeconfig, an error will prompt you to select a context explicitly.
 
+
+### Sync all contexts
+
+You can sync all the contexts in your local kubeconfig with the remote server by using the --all flag:
+
+```bash
+kctxsync sync --all
+```
+
+### Specify a custom SSH host
+
+If you need to connect to a specific SSH host (instead of using the server from the kubeconfig), you can use the --ssh flag:
+
+```bash
+kctxsync sync <context_name> --ssh <ssh_host>
+```
+
+This will allow you to connect to a specific SSH host, overriding the server defined in the kubeconfig for the context.
+
 ## Example
 
 ```bash
-kctxsync sync dev --user ubuntu
+kctxsync sync dev --user ubuntu --ssh my.remote.server.com
 ```
 
-This will connect to the remote server associated with the dev context using the ubuntu user via SSH, fetch the kubeconfig file from the server, and update your local kubeconfig with the latest certificates and keys.
+This will connect to the specified remote server `my.remote.server.com` using the SSH user `ubuntu`, fetch the kubeconfig file, and sync the context dev from the remote kubeconfig to your local kubeconfig.
 
 ## Installation
 
