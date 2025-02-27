@@ -23,6 +23,19 @@
 
 ## Usage
 
+### Get certificate time expiration
+
+The get command lists all available Kubernetes contexts from the kubeconfig file and displays the certificate expiration time for each context.
+
+```bash
+kctxsync get
+
+List of available Kubernetes contexts (sorted alphabetically):
+- staging (certificate time expiration: 341d 11h 0m)
+- dev (certificate time expiration: 123d 10h 54m)
+- prod (certificate expired)
+```
+
 ### Sync a specific context
 
 To sync the local kubeconfig with the remote server's kubeconfig, use the following command:
@@ -39,7 +52,6 @@ kctxsync sync <context_name> --config /path/to/kubeconfig --user <ssh_user>
 ```
 
 If you do not provide a context and there are multiple contexts in the kubeconfig, an error will prompt you to select a context explicitly.
-
 
 ### Sync all contexts
 
